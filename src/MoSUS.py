@@ -24,7 +24,7 @@ def load_instance(json_file):
 
   ########################   DATA   ########################################
   
-json_instance = load_instance('C:/Users/nisri/SUSINCHAIN/Data/insects_data.json') 
+json_instance = load_instance('../data/insects_data.json') 
 insects = json_instance['Number_of_insects']
 feed = json_instance['Number_of_feed']
 countries = json_instance['Number_of_countries']
