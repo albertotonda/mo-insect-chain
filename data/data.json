@@ -1,0 +1,21 @@
+{
+    "Number_of_insects": 4,
+    "insect_1": {
+        "name": "Tenebrio molitor"
+        "second_name": " ",
+    },
+    
+    "insect_2": {
+        "name": "Hermetica illucens"
+        "second_name": " ",
+    },
+    "insect_3": {
+        "name": "Alphitobius diaperinus"
+        "second_name": " ",
+    },
+    "insect_4": {
+        "name": "Tacheta domesticusr"
+        "second_name": " ",
+    },
+    
+   
