@@ -22,7 +22,12 @@ def load_instance(json_file):
 
 def fitness_function(candidate, json_instance) :
 
-    return
+    insect_biomass = 0 # maximize
+    insect_frass = 0 # minimize
+    labor = 0 # maximize
+    labor_safety = 0 # maximize
+
+    return insect_biomass, insect_frass, labor, labor_safety
 
 
 def generator(random, args) :
