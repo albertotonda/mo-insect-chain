@@ -47,6 +47,7 @@ class Chromosome:
     labor = 0
     labor_safety = 0
     insect_frass = 0
+
     def fitness(self,json_instance):
         insect_biomass = 0
         insect_frass = 0
