@@ -20,21 +20,32 @@ def load_instance(json_file):
             return load(file_object)
     return None
 
-def fitness_function(candidate, json_instance) :
-
-    insect_biomass = 0 # maximize
+def fitness_function(candidate, json_instance) :   
+    operating_profit = 0 # maximize
     insect_frass = 0 # minimize
     labor = 0 # maximize
     labor_safety = 0 # maximize
+    for feed_id in range(len(json_instance['feed'])):
+            operating_profit += (json_instance["C"]-json_instance["labor"]*candidate.Number_of_employee-json_instance["feed_cost"]-json_instance["energy"]-json_instance["rent"])*json_instance["FCE"][feed_id]*json_instance["NRF"][feed_id]*candidate.Amount_feed[feed_id]
+            for scale_id in len(json_instance['scales']):
+                insect_frass += candidate.Amount_feed[feed_id]/json_instance["NRF"][feed_id]*(1-json_instance["FCE"][feed_id])*json_instance["NRF"][feed_id]*json_instance["SF_ls"][scale_id]*candidate.scale[scale_id]
+                 
+    labor = json_instance["RW"]*json_instance["RWT"]*json_instance["CFfw"]*candidate.Number_of_employee
+    for equipment_id in range(len(json_instance['equipments'])):
+        for scale_id in len(json_instance['scales']):
+            labor_safety += json_instance["PPE"][equipment_id]*candidate.equipments[equipment_id]*json_instance["SFls"][scale_id]*candidate.scale[scale_id]*candidate.Number_of_employee
+    
 
-    return insect_biomass, insect_frass, labor, labor_safety
+    return operating_profit, insect_frass, labor, labor_safety
 
 
 def generator(random, args) :
 
     boundaries = args["boundaries"]
+    
 
     # here we need to generate a random individual and check that the boundaries are respected
+    
 
     return
 

@@ -1,21 +1,77 @@
 {
-    "Number_of_insects": 4,
-    "insect_1": {
-        "name": "Tenebrio molitor"
-        "second_name": " ",
+    "insect": "T.Molitor",
+    "Labour": 1680                    
+    "energy_cost": 45                
+    "feed_cost": 807                      
+    "total indirect costs": 850   
+    "rent": 20000   
+                                     
+
+
+    "sales_price": 1771            
+    "feed": [
+    {
+    "id": 1,
+    "name": "grains",
+    "FCE":
+    "NRF":
     },
-    
-    "insect_2": {
-        "name": "Hermetica illucens"
-        "second_name": " ",
+    {
+    "id": 2,
+    "name": "meal",  
+    "FCE":
+    "NRF":
     },
-    "insect_3": {
-        "name": "Alphitobius diaperinus"
-        "second_name": " ",
+    {
+    "id": 3,
+    "name": "flour", 
+    "FCE":
+    "NRF": 
+    }, 
+    {
+    "id": 4,
+    "name": "bran", 
+    "FCE":
+    "NRF": 
     },
-    "insect_4": {
-        "name": "Tacheta domesticusr"
-        "second_name": " ",
+    {
+    "id": 5,
+    "name": "course cereal", 
+    "FCE":
+    "NRF": 
     },
-    
-   
+    {
+    "id": 6,
+    "name": "bread", 
+    "FCE":
+    "NRF": 
+    },
+    {
+    "id": 7,
+    "name": "crackers",
+    "FCE":
+    "NRF":  
+    }, 
+    {
+    "id": 8,
+    "name": "mill sweepings", 
+    "FCE":
+    "NRF": 
+    }, 
+    "id": 9,
+    "name": "meat scraps",  
+    "FCE":
+    "NRF":
+    },
+    "id": 10,
+    "name": "feathers", 
+    "FCE":
+    "NRF": 
+    },
+    "id": 11,
+    "name": "dead insects",  
+    "FCE":
+    "NRF":
+    }
+        ]
+ }
