@@ -14,19 +14,19 @@
     "id": 1,
     "name": "HPHF",
     "FCE": 1/0.012
-    "feed_cost": 42
+    "feed_cost": 0.042
     },
     {
     "id": 2,
     "name": "HPLF",  
     "FCE": 1/0.01
-    "feed_cost": 44
+    "feed_cost": 0.044
     },
     {
     "id": 3,
     "name": "LPHF", 
     "FCE": 1/0.008
-    "feed_cost": 46
+    "feed_cost": 0.046
     }, 
     {
     "id": 4,
@@ -36,4 +36,7 @@
     },
     
         ]
+    "RW": 1680
+    "RWT": 40
+    
  }
