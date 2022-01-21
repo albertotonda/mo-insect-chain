@@ -6,6 +6,7 @@ import inspyred # library for evolutionary algorithms
 import io
 import numpy as np
 import os
+import pandas as pd # to manipulate CSV files
 import random # to generate random numbers
 import sys
 
@@ -197,6 +198,8 @@ def main() :
     boundaries["EQ"] = 5 # number of different types of equipments
     boundaries["F"] = 5 # types of different feeds
 
+    # TODO boundaries for AIF and Nl, depending on SC
+
     # initialize random number generator
     random_number_generator = random_number_generator = random.Random()
     random_number_generator.seed(random_seed)
@@ -221,6 +224,37 @@ def main() :
                             json_instance = json_instance,
     )
 
+    # save the final Pareto front in a .csv file
+    # prepare dictionary that will be later converted to .csv file using Pandas library
+    df_dictionary = { "SC": [], "AIF": [], "Nl": [] } 
+    for e in range(0, boundaries["EQ"]) :
+        df_dictionary["EQ" + str(e)] = []
+    for f in range(0, boundaries["F"]) :
+        df_dictionary["F" + str(f)] = []
+
+    # TODO change names of the fitnesses to their appropriate correspondence (e.g. "Profit", "Social Impact", "Environmental Impact")
+    df_dictionary["Fitness1"] = []
+    df_dictionary["Fitness2"] = []
+    df_dictionary["Fitness3"] = []
+
+    # go over the list of individuals in the Pareto front and store them in the dictionary 
+    for individual in final_pareto_front :
+
+        genome = individual.candidate
+        for k in genome :
+            # manage parts of the genome who are lists
+            if isinstance(genome[k], list) :
+                for i in range(0, len(genome[k])) :
+                    df_dictionary[k + str(i)].append(genome[k][i])
+            else :
+                df_dictionary[k].append(genome[k])
+
+        df_dictionary["Fitness1"] = individual.fitness[0]
+        df_dictionary["Fitness2"] = individual.fitness[1]
+        df_dictionary["Fitness3"] = individual.fitness[2]
+
+    df = pd.DataFrame.from_dict(df_dictionary)
+    df.to_csv("pareto-front.csv", index=False)
 
     return
 
