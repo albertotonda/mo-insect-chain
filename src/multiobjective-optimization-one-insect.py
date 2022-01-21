@@ -20,25 +20,43 @@ def load_instance(json_file):
     if os.path.exists(path=json_file):
         with io.open(json_file, 'rt', newline='') as file_object:
             return load(file_object)
+        
+    print("Error: cannot read file %s" % json_file)
     return None
 
-def fitness_function(candidate, json_instance) :   
-
-    return 0, 0, 0 # TODO remove this, it's just to perform some trial runs
+def fitness_function(candidate, json_instance, boundaries) :   
 
     operating_profit = 0 # maximize
     insect_frass = 0 # minimize
     labor = 0 # maximize
     labor_safety = 0 # maximize
-    for feed_id in range(len(json_instance['feed'])):
-            operating_profit += (json_instance["C"]-json_instance["labor"]*candidate.Number_of_employee-json_instance["feed_cost"]-json_instance["energy"]-json_instance["rent"])*json_instance["FCE"][feed_id]*candidate.Amount_feed[feed_id]
-            for scale_id in len(json_instance['scales']):
-                insect_frass += candidate.Amount_feed[feed_id]/json_instance["NRF"][feed_id]*(1-json_instance["FCE"][feed_id])*json_instance["NRF"][feed_id]*json_instance["SF_ls"][scale_id]*candidate.scale[scale_id]
-                 
-    labor = json_instance["RW"]*json_instance["RWT"]*json_instance["CFfw"]*candidate.Number_of_employee
-    for equipment_id in range(len(json_instance['equipments'])):
-        for scale_id in len(json_instance['scales']):
-            labor_safety += json_instance["PPE"][equipment_id]*candidate.equipments[equipment_id]*json_instance["SFls"][scale_id]*candidate.scale[scale_id]*candidate.Number_of_employee
+    
+    SC = candidate["SC"]
+    Nl = int(candidate["Nl"] * (boundaries["Nl"][SC][1] - boundaries["Nl"][SC][0]))
+    AIF = candidate["AIF"] * (boundaries["AIF"][SC][1] - boundaries["AIF"][SC][0])
+    F = candidate["F"]
+    EQ = candidate["EQ"]
+    
+    # operating profit and frass
+    biomass = 0.0
+    feed_cost = 0.0
+    insect_frass = 0.0
+    labor_safet = 0
+    for index, feed_dict in enumerate(json_instance["feed"]) :
+        biomass += AIF * F[index] * feed_dict["FCE"]
+        feed_cost += AIF * F[index] * feed_dict["feed_cost"]
+        insect_frass += AIF / feed_dict["FCE"] * (1.0 - feed_dict["FCE"]) * json_instance["Frsf"][SC-1]
+        
+    operating_profit = (json_instance["sales_price"]-json_instance["energy_cost"]) * biomass - json_instance["labor"]*Nl-json_instance["rent"][SC-1]
+    print(operating_profit)
+    
+    # equipment cost
+    equipment_cost = 0.0
+    
+    for index, equip_dict in enumerate(json_instance["equipments"]) : 
+        labor_safety += equip_dict["equipment_cost"]*EQ[index]*json_instance["SFls"][SC-1]* json_instance["labor"]*Nl
+    
+    sys.exit(0)
     
 
     return operating_profit, insect_frass, labor, labor_safety
@@ -82,10 +100,11 @@ def generator(random, args) :
 def evaluator(candidates, args) :
 
     json_instance = args["json_instance"]
+    boundaries = args["boundaries"]
 
     list_of_fitness_values = []
     for candidate in candidates :
-        f1, f2, f3 = fitness_function(candidate, json_instance)
+        f1, f2, f3 = fitness_function(candidate, json_instance, boundaries)
         list_of_fitness_values.append(inspyred.ec.emo.Pareto( [f1, f2, f3] )) # in this case, for multi-objective optimization we need to create a Pareto fitness object with a list of values
 
     return list_of_fitness_values
@@ -190,16 +209,27 @@ def main() :
     # TODO also, we should do things properly and create a log file
 
     # load information on the problem
-    json_instance = load_instance('../data/insect_data.json') 
+    json_instance = load_instance('../data/data.json') 
 
     # boundaries for all the values included in the individual
     boundaries = dict()
     boundaries["SC"] = [1, 2, 3, 4] # minimum and maximum
     boundaries["EQ"] = 5 # number of different types of equipments
-    boundaries["F"] = 5 # types of different feeds
+    boundaries["F"] = 4 # types of different feeds
 
-    # TODO boundaries for AIF and Nl, depending on SC
-
+    # boundaries for AIF and Nl, depending on SC
+    boundaries["AIF"] = dict()
+    boundaries["AIF"][1] = [25000, 75000]
+    boundaries["AIF"][2] = [75000, 125000]
+    boundaries["AIF"][3] = [125000, 175000]
+    boundaries["AIF"][4] = [175000, 250000]    
+    
+    boundaries["Nl"] = dict()
+    boundaries["Nl"][1] = [25, 75]
+    boundaries["Nl"][2] = [75, 125]
+    boundaries["Nl"][3] = [125, 175]
+    boundaries["Nl"][4] = [175, 250]
+    
     # initialize random number generator
     random_number_generator = random_number_generator = random.Random()
     random_number_generator.seed(random_seed)

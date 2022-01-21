@@ -1,42 +1,68 @@
 {
     "insect": "T.Molitor",
-    "Labour": 1680                    
-    "energy_cost": 45                
-    "feed_cost": 807                      
-    "total indirect costs": 850   
-    "rent": 20000   
-                                     
-
-
-    "sales_price": 1771            
+    "labor": 1680,                  
+    "energy_cost": 45,                
+    "feed_cost": 807,                      
+    "total indirect costs": 850,   
+    "rent": [20000, 40000, 60000,70000],
+    "sales_price": 1771,            
     "feed": [
     {
     "id": 1,
     "name": "HPHF",
-    "FCE": 1/0.012
+    "FCE": 1,
     "feed_cost": 0.042
     },
     {
     "id": 2,
     "name": "HPLF",  
-    "FCE": 1/0.01
+    "FCE": 3,
     "feed_cost": 0.044
     },
     {
     "id": 3,
     "name": "LPHF", 
-    "FCE": 1/0.008
+    "FCE": 5,
     "feed_cost": 0.046
     }, 
     {
     "id": 4,
     "name": "LPLF", 
-    "FCE": 1/0.007
+    "FCE": 4,
     "feed_cost": 0.048
-    },
+    }
     
-        ]
-    "RW": 1680
-    "RWT": 40
-    
+        ],
+    "RW": 1680,
+    "RWT": 40,
+    "Frsf": [0.8, 0.7, 0.5, 0.3],
+    "equipments": [
+     {
+     "id": 1,
+     "name": "gloves",
+     "equipment_cost": 30
+     },
+     {
+     "id": 2,
+     "name": "glasses",  
+     "equipment_cost": 70
+     },
+     {
+     "id": 3,
+     "name": "security_shoes",  
+     "equipment_cost": 15
+     }, 
+     {
+     "id": 4,
+     "name": "sweater", 
+     "equipment_cost": 100
+     },
+     {
+     "id": 5,
+     "name": "hard_hat", 
+     "equipment_cost": 50
+     }
+     
+         ],
+    "SFls": [1, 1, 1, 1]
  }
