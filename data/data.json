@@ -12,66 +12,28 @@
     "feed": [
     {
     "id": 1,
-    "name": "grains",
-    "FCE":
-    "NRF":
+    "name": "HPHF",
+    "FCE": 1/0.012
+    "feed_cost": 42
     },
     {
     "id": 2,
-    "name": "meal",  
-    "FCE":
-    "NRF":
+    "name": "HPLF",  
+    "FCE": 1/0.01
+    "feed_cost": 44
     },
     {
     "id": 3,
-    "name": "flour", 
-    "FCE":
-    "NRF": 
+    "name": "LPHF", 
+    "FCE": 1/0.008
+    "feed_cost": 46
     }, 
     {
     "id": 4,
-    "name": "bran", 
-    "FCE":
-    "NRF": 
+    "name": "LPLF", 
+    "FCE": 1/0.007
+    "feed_cost": 0.048
     },
-    {
-    "id": 5,
-    "name": "course cereal", 
-    "FCE":
-    "NRF": 
-    },
-    {
-    "id": 6,
-    "name": "bread", 
-    "FCE":
-    "NRF": 
-    },
-    {
-    "id": 7,
-    "name": "crackers",
-    "FCE":
-    "NRF":  
-    }, 
-    {
-    "id": 8,
-    "name": "mill sweepings", 
-    "FCE":
-    "NRF": 
-    }, 
-    "id": 9,
-    "name": "meat scraps",  
-    "FCE":
-    "NRF":
-    },
-    "id": 10,
-    "name": "feathers", 
-    "FCE":
-    "NRF": 
-    },
-    "id": 11,
-    "name": "dead insects",  
-    "FCE":
-    "NRF":
-    }
+    
         ]
  }

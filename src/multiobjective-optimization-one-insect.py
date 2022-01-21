@@ -31,7 +31,7 @@ def fitness_function(candidate, json_instance) :
     labor = 0 # maximize
     labor_safety = 0 # maximize
     for feed_id in range(len(json_instance['feed'])):
-            operating_profit += (json_instance["C"]-json_instance["labor"]*candidate.Number_of_employee-json_instance["feed_cost"]-json_instance["energy"]-json_instance["rent"])*json_instance["FCE"][feed_id]*json_instance["NRF"][feed_id]*candidate.Amount_feed[feed_id]
+            operating_profit += (json_instance["C"]-json_instance["labor"]*candidate.Number_of_employee-json_instance["feed_cost"]-json_instance["energy"]-json_instance["rent"])*json_instance["FCE"][feed_id]*candidate.Amount_feed[feed_id]
             for scale_id in len(json_instance['scales']):
                 insect_frass += candidate.Amount_feed[feed_id]/json_instance["NRF"][feed_id]*(1-json_instance["FCE"][feed_id])*json_instance["NRF"][feed_id]*json_instance["SF_ls"][scale_id]*candidate.scale[scale_id]
                  
