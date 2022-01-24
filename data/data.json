@@ -5,7 +5,10 @@
     "total indirect costs": 850,   
     "rent": [240000, 480000, 720000,840000],
     "sales_price": 1771,   
-    "RWT": 40        
+    "RWT": 39 
+    "MLW": 1508
+    "CWT": 40
+    "IEF": 0.309     
     "feed": [
     {
     "id": 1,

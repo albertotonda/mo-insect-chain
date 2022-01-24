@@ -51,7 +51,7 @@ def fitness_function(candidate, json_instance, boundaries) :
     
     for index, equip_dict in enumerate(json_instance["equipments"]) : 
         labor_safety += equip_dict["equipment_cost"] * EQ[index] * json_instance["SFls"][SC-1] * Nl
-        FWP = (RW / json_instance["RWT"])*json_instance["CF_fw"]* Nl
+        FWP = (RW / json_instance["RWT"])* (json_instance["CWT"]/json_instance["MLW"])*(1-json_instance["IEF^2"])
         social_aspect = weight * labor_safety + (1-weight) * FWP
         
     for index, feed_dict in enumerate(json_instance["feed"]) :
