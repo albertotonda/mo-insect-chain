@@ -38,7 +38,7 @@ def main() :
     input_file = "pareto-front.csv"
     fitness_names = ["Fitness1", "Fitness2", "Fitness3"] # these should be changed with the names of the corresponding columns in the CSV file
     # output folder with a unique name, using the current date and time
-    output_folder = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")+ "-" + sys.argv[0][:-3] 
+    output_folder = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")+ "-visualize-results" 
 
     # read the CSV file
     print("Reading file \"%s\"..." % input_file)
