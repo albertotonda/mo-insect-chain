@@ -11,6 +11,7 @@ import random # to generate random numbers
 import sys
 
 from json import load, dump
+from random import randrange
 
 def load_instance(json_file):
     """
@@ -47,19 +48,23 @@ def fitness_function(candidate, json_instance, boundaries) :
         feed_cost += AIF * F[index] * feed_dict["feed_cost"]
         insect_frass += AIF / feed_dict["FCE"] * (1.0 - feed_dict["FCE"]) * json_instance["Frsf"][SC-1]
         
-    operating_profit = (json_instance["sales_price"]-json_instance["energy_cost"]) * biomass - json_instance["labor"]*Nl-json_instance["rent"][SC-1]
+    operating_profit = (json_instance["sales_price"]-json_instance["energy_cost"]) * biomass - json_instance["labor"]*Nl-json_instance["rent"][SC-1]-labor_safety
     print(operating_profit)
     
     # equipment cost
     equipment_cost = 0.0
+    weight=random.uniform(0, 1)
     
     for index, equip_dict in enumerate(json_instance["equipments"]) : 
-        labor_safety += equip_dict["equipment_cost"]*EQ[index]*json_instance["SFls"][SC-1]* json_instance["labor"]*Nl
+        labor_safety += equip_dict["equipment_cost"] * EQ[index] * json_instance["SFls"][SC-1] * json_instance["labor"] 
+        labor = json_instance["labor"] * Nl
+        social_aspect = weight * labor_safety + (1-weight) * labor
+        
     
     sys.exit(0)
     
 
-    return operating_profit, insect_frass, labor, labor_safety
+    return operating_profit, insect_frass, social_aspect
 
 
 def generator(random, args) :
@@ -77,6 +82,8 @@ def generator(random, args) :
     # other values are in (0,1), and will then be scaled depending on the scale of the company (before evaluation)
     individual["AIF"] = random.uniform(0, 1)
     individual["Nl"] = random.uniform(0, 1)
+
+    
 
     # protective equipments can or cannot be acquired
     individual["EQ"] = list()
@@ -182,7 +189,6 @@ def variator(random, candidate1, candidate2, args) :
     # in our case, we just need to normalize the amounts of each type of feed, and check that the
     # quantities in (0,1) are still in (0,1)
     for individual in children :
-
         denominator = sum(individual["F"])
         for i in range(0, boundaries["F"]) :
             individual["F"][i] /= denominator
@@ -263,9 +269,9 @@ def main() :
         df_dictionary["F" + str(f)] = []
 
     # TODO change names of the fitnesses to their appropriate correspondence (e.g. "Profit", "Social Impact", "Environmental Impact")
-    df_dictionary["Fitness1"] = []
-    df_dictionary["Fitness2"] = []
-    df_dictionary["Fitness3"] = []
+    df_dictionary["Economic Impact"] = []
+    df_dictionary["Environmental Impact"] = []
+    df_dictionary["Social Impact"] = []
 
     # go over the list of individuals in the Pareto front and store them in the dictionary 
     for individual in final_pareto_front :
@@ -279,9 +285,9 @@ def main() :
             else :
                 df_dictionary[k].append(genome[k])
 
-        df_dictionary["Fitness1"] = individual.fitness[0]
-        df_dictionary["Fitness2"] = individual.fitness[1]
-        df_dictionary["Fitness3"] = individual.fitness[2]
+        df_dictionary["Economic Impact"] = individual.fitness[0]
+        df_dictionary["Environmental Impact"] = individual.fitness[1]
+        df_dictionary["Social Impact"] = individual.fitness[2]
 
     df = pd.DataFrame.from_dict(df_dictionary)
     df.to_csv("pareto-front.csv", index=False)
