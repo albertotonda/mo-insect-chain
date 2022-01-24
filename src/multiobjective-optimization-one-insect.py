@@ -33,11 +33,11 @@ def fitness_function(candidate, json_instance, boundaries) :
     labor_safety = 0 # maximize
     
     SC = candidate["SC"]
-    Nl = int(candidate["Nl"] * (boundaries["Nl"][SC][1] - boundaries["Nl"][SC][0]))
-    AIF = candidate["AIF"] * (boundaries["AIF"][SC][1] - boundaries["AIF"][SC][0])
+    Nl = int(candidate["Nl"] * (boundaries["Nl"][SC][1] - boundaries["Nl"][SC][0]) + boundaries["Nl"][SC][0])
+    AIF = candidate["AIF"] * (boundaries["AIF"][SC][1] - boundaries["AIF"][SC][0]) + boundaries["Nl"][SC][0]
     F = candidate["F"]
     EQ = candidate["EQ"]
-    RW = candidate["RW"]
+    RW = candidate["RW"] * (boundaries["RW"][1] - boundaries["RW"][0]) + boundaries["RW"][0]
     
     # operating profit and frass
     biomass = 0.0
@@ -47,7 +47,7 @@ def fitness_function(candidate, json_instance, boundaries) :
     
     # equipment cost
     equipment_cost = 0.0
-    weight=random.uniform(0, 1)
+    weight = random.uniform(0, 1)
     
     for index, equip_dict in enumerate(json_instance["equipments"]) : 
         labor_safety += equip_dict["equipment_cost"] * EQ[index] * json_instance["SFls"][SC-1] * Nl
@@ -62,8 +62,6 @@ def fitness_function(candidate, json_instance, boundaries) :
         
     operating_profit = (json_instance["sales_price"]-json_instance["energy_cost"]) * biomass - RW*Nl*12 -json_instance["rent"][SC-1]-labor_safety - feed_cost
     print(operating_profit)
-    
-    
 
     return operating_profit, insect_frass, social_aspect
 
@@ -79,14 +77,11 @@ def generator(random, args) :
 
     # first step: randomize the scale of the company end the real wages
     individual["SC"] = random.choice(boundaries["SC"])
-    individual["RW"] = random.choice(boundaries["RW"])
 
     # other values are in (0,1), and will then be scaled depending on the scale of the company (before evaluation)
     individual["AIF"] = random.uniform(0, 1)
     individual["Nl"] = random.uniform(0, 1)
-    
-
-    
+    individual["RW"] = random.uniform(0, 1)
 
     # protective equipments can or cannot be acquired
     individual["EQ"] = list()
@@ -168,7 +163,7 @@ def variator(random, candidate1, candidate2, args) :
 
         elif to_be_mutated == "EQ" :
             # this is easy, perform a random number of bit flips; low (high probability) or high (low probability)
-            number_of_bit_flips = min(random.randint(1, len(individual["EQ"])+1) for i in range(0, len(individual["EQ"])))
+            number_of_bit_flips = min(random.randint(1, len(individual["EQ"])) for i in range(0, len(individual["EQ"])))
             # choose several equipments (with replacement)
             indexes = random.sample(range(0, len(individual["EQ"])), number_of_bit_flips)
 
@@ -180,8 +175,9 @@ def variator(random, candidate1, candidate2, args) :
 
         elif to_be_mutated == "F" :
             # perform a random number of value modifications; low (high probability) or high (low probability)
-            number_of_modifications = min(random.randint(1, len(individual["F"])+1) for i in range(0, len(individual["F"])))
+            number_of_modifications = min(random.randint(1, len(individual["F"])) for i in range(0, len(individual["F"])))
             # choose several types of feed (with replacement)
+            print("Number of modifications: %d" % number_of_modifications)
             indexes = random.sample(range(0, len(individual["F"])), number_of_modifications)
 
             # small Gaussian mutation on each quantity
@@ -266,7 +262,7 @@ def main() :
 
     # save the final Pareto front in a .csv file
     # prepare dictionary that will be later converted to .csv file using Pandas library
-    df_dictionary = { "SC": [], "AIF": [], "Nl": [] } 
+    df_dictionary = { "SC": [], "AIF": [], "Nl": [], "RW": [] } 
     for e in range(0, boundaries["EQ"]) :
         df_dictionary["EQ" + str(e)] = []
     for f in range(0, boundaries["F"]) :
