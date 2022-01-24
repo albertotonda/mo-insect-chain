@@ -37,28 +37,32 @@ def fitness_function(candidate, json_instance, boundaries) :
     AIF = candidate["AIF"] * (boundaries["AIF"][SC][1] - boundaries["AIF"][SC][0])
     F = candidate["F"]
     EQ = candidate["EQ"]
+    RW = candidate["RW"]
     
     # operating profit and frass
     biomass = 0.0
     feed_cost = 0.0
     insect_frass = 0.0
     labor_safet = 0
-    for index, feed_dict in enumerate(json_instance["feed"]) :
-        biomass += AIF * F[index] * feed_dict["FCE"]
-        feed_cost += AIF * F[index] * feed_dict["feed_cost"]
-        insect_frass += AIF / feed_dict["FCE"] * (1.0 - feed_dict["FCE"]) * json_instance["Frsf"][SC-1]
-        
-    operating_profit = (json_instance["sales_price"]-json_instance["energy_cost"]) * biomass - json_instance["labor"]*Nl-json_instance["rent"][SC-1]-labor_safety
-    print(operating_profit)
     
     # equipment cost
     equipment_cost = 0.0
     weight=random.uniform(0, 1)
     
     for index, equip_dict in enumerate(json_instance["equipments"]) : 
-        labor_safety += equip_dict["equipment_cost"] * EQ[index] * json_instance["SFls"][SC-1] * json_instance["labor"] 
-        labor = json_instance["labor"] * Nl
-        social_aspect = weight * labor_safety + (1-weight) * labor
+        labor_safety += equip_dict["equipment_cost"] * EQ[index] * json_instance["SFls"][SC-1] * Nl
+        FWP = (RW / json_instance["RWT"])*json_instance["CF_fw"]* Nl
+        social_aspect = weight * labor_safety + (1-weight) * FWP
+        
+    for index, feed_dict in enumerate(json_instance["feed"]) :
+        biomass += AIF * F[index] * feed_dict["FCE"]
+        feed_cost += AIF * F[index] * feed_dict["feed_cost"]
+        insect_frass += AIF / feed_dict["FCE"] * (1.0 - feed_dict["FCE"]) * json_instance["Frsf"][SC-1]
+        
+    operating_profit = (json_instance["sales_price"]-json_instance["energy_cost"]) * biomass - labor -json_instance["rent"][SC-1]-labor_safety - feed_cost
+    print(operating_profit)
+    
+
         
     
     sys.exit(0)
@@ -76,12 +80,14 @@ def generator(random, args) :
     print("Generating new individual...")
     individual = dict()
 
-    # first step: randomize the scale of the company
+    # first step: randomize the scale of the company end the real wages
     individual["SC"] = random.choice(boundaries["SC"])
+    individual["RW"] = random.choice(boundaries["RW"])
 
     # other values are in (0,1), and will then be scaled depending on the scale of the company (before evaluation)
     individual["AIF"] = random.uniform(0, 1)
     individual["Nl"] = random.uniform(0, 1)
+    
 
     
 
@@ -222,6 +228,7 @@ def main() :
     boundaries["SC"] = [1, 2, 3, 4] # minimum and maximum
     boundaries["EQ"] = 5 # number of different types of equipments
     boundaries["F"] = 4 # types of different feeds
+    boundaries["RW"] = [18096, 32268]
 
     # boundaries for AIF and Nl, depending on SC
     boundaries["AIF"] = dict()

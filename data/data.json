@@ -1,11 +1,11 @@
 {
-    "insect": "T.Molitor",
-    "labor": 1680,                  
+    "insect": "T.Molitor",                 
     "energy_cost": 45,                
     "feed_cost": 807,                      
     "total indirect costs": 850,   
-    "rent": [20000, 40000, 60000,70000],
-    "sales_price": 1771,            
+    "rent": [240000, 480000, 720000,840000],
+    "sales_price": 1771,   
+    "RWT": 40        
     "feed": [
     {
     "id": 1,
@@ -54,7 +54,7 @@
      }, 
      {
      "id": 4,
-     "name": "sweater", 
+     "name": "coveralls", 
      "equipment_cost": 100
      },
      {
@@ -65,4 +65,5 @@
      
          ],
     "SFls": [1, 1, 1, 1]
+    
  }
