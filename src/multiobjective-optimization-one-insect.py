@@ -51,15 +51,16 @@ def fitness_function(candidate, json_instance, boundaries) :
     
     for index, equip_dict in enumerate(json_instance["equipments"]) : 
         labor_safety += equip_dict["equipment_cost"] * EQ[index] * json_instance["SFls"][SC-1] * Nl
-        FWP = (RW / json_instance["RWT"])* (json_instance["CWT"]/json_instance["MLW"])*(1-json_instance["IEF^2"])
-        social_aspect = weight * labor_safety + (1-weight) * FWP
+    
+    FWP = (RW / json_instance["RWT"])* (json_instance["CWT"]/json_instance["MLW"])*(1-json_instance["IEF^2"])
+    social_aspect = weight * labor_safety + (1-weight) * FWP
         
     for index, feed_dict in enumerate(json_instance["feed"]) :
         biomass += AIF * F[index] * feed_dict["FCE"]
         feed_cost += AIF * F[index] * feed_dict["feed_cost"]
         insect_frass += AIF / feed_dict["FCE"] * (1.0 - feed_dict["FCE"]) * json_instance["Frsf"][SC-1]
         
-    operating_profit = (json_instance["sales_price"]-json_instance["energy_cost"]) * biomass - labor -json_instance["rent"][SC-1]-labor_safety - feed_cost
+    operating_profit = (json_instance["sales_price"]-json_instance["energy_cost"]) * biomass - RW*Nl*12 -json_instance["rent"][SC-1]-labor_safety - feed_cost
     print(operating_profit)
     
 
