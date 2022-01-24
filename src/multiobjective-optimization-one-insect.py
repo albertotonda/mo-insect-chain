@@ -52,7 +52,7 @@ def fitness_function(candidate, json_instance, boundaries) :
     for index, equip_dict in enumerate(json_instance["equipments"]) : 
         labor_safety += equip_dict["equipment_cost"] * EQ[index] * json_instance["SFls"][SC-1] * Nl
     
-    FWP = (RW / json_instance["RWT"])* (json_instance["CWT"]/json_instance["MLW"])*(1-json_instance["IEF^2"])
+    FWP = (RW / json_instance["RWT"])* (json_instance["CWT"]/json_instance["MLW"])*(1 - np.square(json_instance["IEF"]))
     social_aspect = weight * labor_safety + (1-weight) * FWP
         
     for index, feed_dict in enumerate(json_instance["feed"]) :
@@ -63,10 +63,6 @@ def fitness_function(candidate, json_instance, boundaries) :
     operating_profit = (json_instance["sales_price"]-json_instance["energy_cost"]) * biomass - RW*Nl*12 -json_instance["rent"][SC-1]-labor_safety - feed_cost
     print(operating_profit)
     
-
-        
-    
-    sys.exit(0)
     
 
     return operating_profit, insect_frass, social_aspect
