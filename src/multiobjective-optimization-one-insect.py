@@ -39,6 +39,7 @@ def fitness_function(candidate, json_instance, boundaries) :
     EQ = candidate["EQ"]
     RW = candidate["RW"] * (boundaries["RW"][1] - boundaries["RW"][0]) + boundaries["RW"][0]
     
+    
     # operating profit and frass
     biomass = 0.0
     feed_cost = 0.0
@@ -63,6 +64,7 @@ def fitness_function(candidate, json_instance, boundaries) :
     operating_profit = (json_instance["sales_price"]-json_instance["energy_cost"]) * biomass - RW*Nl*12 -json_instance["rent"][SC-1]-labor_safety - feed_cost
     
     print(operating_profit)
+   
 
     return operating_profit, insect_frass, social_aspect
 
