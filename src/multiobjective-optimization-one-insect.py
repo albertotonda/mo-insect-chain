@@ -35,6 +35,7 @@ def convert_individual_to_values(candidate, boundaries) :
     EQ = candidate["EQ"]
     RW = candidate["RW"] * (boundaries["RW"][1] - boundaries["RW"][0]) + boundaries["RW"][0]
     
+<<<<<<< HEAD
     return SC, Nl, AIF, F, EQ, RW
 
 def fitness_function(candidate, json_instance, boundaries) :   
@@ -45,6 +46,8 @@ def fitness_function(candidate, json_instance, boundaries) :
     labor_safety = 0 # maximize
 
     SC, Nl, AIF, F, EQ, RW = convert_individual_to_values(candidate, boundaries)
+=======
+>>>>>>> c95c2991de429c91b78a446c4df87ef0af509039
     
     # operating profit and frass
     biomass = 0.0
@@ -69,7 +72,9 @@ def fitness_function(candidate, json_instance, boundaries) :
         insect_frass += AIF / feed_dict["FCE"] * (1.0 - feed_dict["FCE"]) * json_instance["Frsf"][SC-1]
         
     operating_profit = (json_instance["sales_price"]-json_instance["energy_cost"]) * biomass - RW*Nl*12 -json_instance["rent"][SC-1]-labor_safety - feed_cost
+    
     print(operating_profit)
+   
 
     return operating_profit, insect_frass, social_aspect
 

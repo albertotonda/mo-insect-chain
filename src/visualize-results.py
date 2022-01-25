@@ -36,7 +36,7 @@ def main() :
 
     # a few hard-coded values
     input_file = "pareto-front.csv"
-    fitness_names = ["Fitness1", "Fitness2", "Fitness3"] # these should be changed with the names of the corresponding columns in the CSV file
+    fitness_names = ["Economic Impact", "Environmental Impact", "Social Impact"] # these should be changed with the names of the corresponding columns in the CSV file
     # output folder with a unique name, using the current date and time
     output_folder = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")+ "-visualize-results" 
 
