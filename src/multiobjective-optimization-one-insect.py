@@ -25,13 +25,9 @@ def load_instance(json_file):
     print("Error: cannot read file %s" % json_file)
     return None
 
-def fitness_function(candidate, json_instance, boundaries) :   
+# this function just converts an individual from the internal representation to the external representation
+def convert_individual_to_values(candidate, boundaries) :
 
-    operating_profit = 0 # maximize
-    insect_frass = 0 # minimize
-    labor = 0 # maximize
-    labor_safety = 0 # maximize
-    
     SC = candidate["SC"]
     Nl = int(candidate["Nl"] * (boundaries["Nl"][SC][1] - boundaries["Nl"][SC][0]) + boundaries["Nl"][SC][0])
     AIF = candidate["AIF"] * (boundaries["AIF"][SC][1] - boundaries["AIF"][SC][0]) + boundaries["Nl"][SC][0]
@@ -39,15 +35,27 @@ def fitness_function(candidate, json_instance, boundaries) :
     EQ = candidate["EQ"]
     RW = candidate["RW"] * (boundaries["RW"][1] - boundaries["RW"][0]) + boundaries["RW"][0]
     
+    return SC, Nl, AIF, F, EQ, RW
+
+def fitness_function(candidate, json_instance, boundaries) :   
+
+    operating_profit = 0 # maximize
+    insect_frass = 0 # minimize
+    labor = 0 # maximize
+    labor_safety = 0 # maximize
+
+    SC, Nl, AIF, F, EQ, RW = convert_individual_to_values(candidate, boundaries)
+    
     # operating profit and frass
     biomass = 0.0
     feed_cost = 0.0
     insect_frass = 0.0
-    labor_safet = 0
+    labor_safety = 0
     
     # equipment cost
     equipment_cost = 0.0
-    weight = random.uniform(0, 1)
+    #weight = random.uniform(0, 1) # TODO why was this weight randomized?
+    weight = 0.5
     
     for index, equip_dict in enumerate(json_instance["equipments"]) : 
         labor_safety += equip_dict["equipment_cost"] * EQ[index] * json_instance["SFls"][SC-1] * Nl
@@ -237,7 +245,7 @@ def main() :
     boundaries["Nl"][4] = [175, 250]
     
     # initialize random number generator
-    random_number_generator = random_number_generator = random.Random()
+    random_number_generator = random.Random()
     random_number_generator.seed(random_seed)
 
     # create instance of NSGA2
@@ -252,7 +260,9 @@ def main() :
                             pop_size = 100,
                             num_selected = 200,
                             max_evaluations = 2000,
-                            maximize = True, # it's a minimization problem
+                            maximize = True, # TODO currently, it's trying to maximize EVERYTHING, so we need to 
+                                             # have the fitness function output values that are better than higher
+                                             # for example, use 1.0/value if the initial idea was to minimize
 
                             # all arguments specified below, THAT ARE NOT part of the "evolve" method, will be automatically placed in "args"
                             # "args" is a dictionary that is passed to all functions
@@ -274,9 +284,13 @@ def main() :
     df_dictionary["Social Impact"] = []
 
     # go over the list of individuals in the Pareto front and store them in the dictionary 
+    # after converting them from the internal 'genome' representation to actual values
     for individual in final_pareto_front :
 
-        genome = individual.candidate
+        #genome = individual.genome # uncomment this line and comment the two lines below to have the individuals saved with their internal representation
+        SC, Nl, AIF, F, EQ, RW  = convert_individual_to_values(individual.candidate, boundaries)
+        genome = {"SC": SC, "Nl": Nl, "AIF": AIF, "F": F, "EQ": EQ, "RW": RW}
+
         for k in genome :
             # manage parts of the genome who are lists
             if isinstance(genome[k], list) :
