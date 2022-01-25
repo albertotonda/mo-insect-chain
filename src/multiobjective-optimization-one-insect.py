@@ -61,6 +61,7 @@ def fitness_function(candidate, json_instance, boundaries) :
         insect_frass += AIF / feed_dict["FCE"] * (1.0 - feed_dict["FCE"]) * json_instance["Frsf"][SC-1]
         
     operating_profit = (json_instance["sales_price"]-json_instance["energy_cost"]) * biomass - RW*Nl*12 -json_instance["rent"][SC-1]-labor_safety - feed_cost
+    
     print(operating_profit)
 
     return operating_profit, insect_frass, social_aspect
