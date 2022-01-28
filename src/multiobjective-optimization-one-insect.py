@@ -79,7 +79,7 @@ def fitness_function(candidate, json_instance, boundaries) :
     print('------------------------')
    
 
-    return operating_profit, insect_frass, social_aspect
+    return 1/operating_profit, 1/insect_frass, social_aspect
 
 
 def generator(random, args) :
