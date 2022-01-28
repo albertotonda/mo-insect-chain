@@ -60,7 +60,7 @@ def fitness_function(candidate, json_instance, boundaries) :
     weight = 0.5
     
     for index, equip_dict in enumerate(json_instance["equipments"]) : 
-        labor_safety += equip_dict["equipment_cost"] * EQ[index] * json_instance["SFls"][SC-1] * Nl
+        labor_safety += equip_dict["equipment_cost"] * EQ[index] * json_instance["SFls"][SC-1]/boundaries["EQ"] * Nl
     
     FWP = (RW / json_instance["RWT"])* (json_instance["CWT"]/json_instance["MLW"])*(1 - np.square(json_instance["IEF"]))
     social_aspect = weight * labor_safety + (1-weight) * FWP
@@ -72,7 +72,11 @@ def fitness_function(candidate, json_instance, boundaries) :
         
     operating_profit = (json_instance["sales_price"]-json_instance["energy_cost"]) * biomass - RW*Nl*12 -json_instance["rent"][SC-1]-labor_safety - feed_cost
     
+    print('------------------------')
     print(operating_profit)
+    print(insect_frass)
+    print(social_aspect)
+    print('------------------------')
    
 
     return operating_profit, insect_frass, social_aspect
@@ -123,7 +127,7 @@ def evaluator(candidates, args) :
     for candidate in candidates :
         f1, f2, f3 = fitness_function(candidate, json_instance, boundaries)
         list_of_fitness_values.append(inspyred.ec.emo.Pareto( [f1, f2, f3] )) # in this case, for multi-objective optimization we need to create a Pareto fitness object with a list of values
-
+    
     return list_of_fitness_values
 
 @inspyred.ec.variators.crossover
@@ -276,16 +280,16 @@ def main() :
 
     # save the final Pareto front in a .csv file
     # prepare dictionary that will be later converted to .csv file using Pandas library
-    df_dictionary = { "SC": [], "AIF": [], "Nl": [], "RW": [] } 
+    df_dictionary = { "SC": [], "AIF": [], "Nl": [], "RW": [], "Economic_Impact": [], "Environmental_Impact": [],"Social_Impact": []} 
     for e in range(0, boundaries["EQ"]) :
         df_dictionary["EQ" + str(e)] = []
     for f in range(0, boundaries["F"]) :
         df_dictionary["F" + str(f)] = []
 
     # TODO change names of the fitnesses to their appropriate correspondence (e.g. "Profit", "Social Impact", "Environmental Impact")
-    df_dictionary["Economic Impact"] = []
-    df_dictionary["Environmental Impact"] = []
-    df_dictionary["Social Impact"] = []
+    #df_dictionary["Economic_Impact"] = []
+    #df_dictionary["Environmental_Impact"] = []
+    #df_dictionary["Social_Impact"] = []
 
     # go over the list of individuals in the Pareto front and store them in the dictionary 
     # after converting them from the internal 'genome' representation to actual values
@@ -293,21 +297,19 @@ def main() :
 
         #genome = individual.genome # uncomment this line and comment the two lines below to have the individuals saved with their internal representation
         SC, Nl, AIF, F, EQ, RW  = convert_individual_to_values(individual.candidate, boundaries)
-        genome = {"SC": SC, "Nl": Nl, "AIF": AIF, "F": F, "EQ": EQ, "RW": RW}
-
+        val_1= individual.fitness[0]
+        val_2= individual.fitness[1]
+        val_3= individual.fitness[2]
+        genome = { "SC": SC, "Nl": Nl, "AIF": AIF, "F": F, "EQ": EQ, "RW": RW, "Economic_Impact": val_1, "Environmental_Impact": val_2, "Social_Impact": val_3}
         for k in genome :
             # manage parts of the genome who are lists
             if isinstance(genome[k], list) :
                 for i in range(0, len(genome[k])) :
                     df_dictionary[k + str(i)].append(genome[k][i])
             else :
-                df_dictionary[k].append(genome[k])
-
-        df_dictionary["Economic Impact"] = individual.fitness[0]
-        df_dictionary["Environmental Impact"] = individual.fitness[1]
-        df_dictionary["Social Impact"] = individual.fitness[2]
-
-    df = pd.DataFrame.from_dict(df_dictionary)
+                df_dictionary[k].append(genome[k]) 
+                 
+        df = pd.DataFrame.from_dict(df_dictionary)
     df.to_csv("pareto-front.csv", index=False)
 
     return
