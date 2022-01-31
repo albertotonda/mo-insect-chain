@@ -294,7 +294,6 @@ def main() :
     # go over the list of individuals in the Pareto front and store them in the dictionary 
     # after converting them from the internal 'genome' representation to actual values
     for individual in final_pareto_front :
-
         #genome = individual.genome # uncomment this line and comment the two lines below to have the individuals saved with their internal representation
         SC, Nl, AIF, F, EQ, RW  = convert_individual_to_values(individual.candidate, boundaries)
         val_1= individual.fitness[0]
@@ -310,7 +309,7 @@ def main() :
                 df_dictionary[k].append(genome[k]) 
                  
         df = pd.DataFrame.from_dict(df_dictionary)
-    df.to_csv("pareto-front.csv", index=False)
+        df.to_csv("pareto-front.csv", index=False)
 
     return
 
