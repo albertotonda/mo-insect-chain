@@ -52,7 +52,9 @@ def fitness_function(candidate, json_instance, boundaries) :
     biomass = 0.0
     feed_cost = 0.0
     insect_frass = 0.0
-    labor_safety = 0
+    labor_safety = 0.0
+    labor_safety_max = 0.0
+    FWP_max = 0.0
     
     # equipment cost
     equipment_cost = 0.0
@@ -60,17 +62,28 @@ def fitness_function(candidate, json_instance, boundaries) :
     weight = 0.5
     
     for index, equip_dict in enumerate(json_instance["equipments"]) : 
-        labor_safety += equip_dict["equipment_cost"] * EQ[index] * json_instance["SFls"][SC-1]/boundaries["EQ"] * Nl
+        labor_safety += equip_dict["equipment_cost"] * EQ[index] * json_instance["SFls"][SC-1] * Nl
+        labor_safety_max += equip_dict["equipment_cost"] * json_instance["SFls"][SC-1] * Nl
     
-    FWP = (RW / json_instance["RWT"])* (json_instance["CWT"]/json_instance["MLW"])*(1 - np.square(json_instance["IEF"]))
-    social_aspect = weight * labor_safety + (1-weight) * FWP
+    FWP = (RW / json_instance["RWT"])* (json_instance["CWT"]/json_instance["MLW"])*(1 - np.square(json_instance["IEF"]))    
+    FWP_max = (boundaries["RW"][1] / json_instance["RWT"])* (json_instance["CWT"]/json_instance["MLW"])*(1 - np.square(json_instance["IEF"]))
+    
+    social_aspect = weight * labor_safety / labor_safety_max + (1-weight) * FWP / FWP_max
         
     for index, feed_dict in enumerate(json_instance["feed"]) :
         biomass += AIF * F[index] * feed_dict["FCE"]
-        feed_cost += AIF * F[index] * feed_dict["feed_cost"]
+        feed_cost += AIF * F[index] * feed_dict["feed_cost"]       
         insect_frass += AIF / feed_dict["FCE"] * (1.0 - feed_dict["FCE"]) * json_instance["Frsf"][SC-1]
-        
     operating_profit = (json_instance["sales_price"]-json_instance["energy_cost"]) * biomass - RW*Nl*12 -json_instance["rent"][SC-1]-labor_safety - feed_cost
+    print('Biomass')
+    print(biomass)
+    print(feed_cost) 
+    print((json_instance["sales_price"]-json_instance["energy_cost"])*biomass)
+    print(RW)
+    print(RW*Nl)
+    print(Nl)
+    print(SC)
+    print(json_instance["rent"][SC-1])
     
     print('------------------------')
     print(operating_profit)
@@ -79,7 +92,7 @@ def fitness_function(candidate, json_instance, boundaries) :
     print('------------------------')
    
 
-    return 1/operating_profit, 1/insect_frass, social_aspect
+    return operating_profit, 1/insect_frass, social_aspect
 
 
 def generator(random, args) :
@@ -237,7 +250,7 @@ def main() :
     boundaries["SC"] = [1, 2, 3, 4] # minimum and maximum
     boundaries["EQ"] = 5 # number of different types of equipments
     boundaries["F"] = 4 # types of different feeds
-    boundaries["RW"] = [18096, 32268]
+    boundaries["RW"] = [1508, 2689]
 
     # boundaries for AIF and Nl, depending on SC
     boundaries["AIF"] = dict()

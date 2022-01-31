@@ -12,29 +12,28 @@
     "feed": [
     {
     "id": 1,
-    "name": "HPHF",
-    "FCE": 1,
+    "name": "Maize DDGS",
+    "FCE": 0.03,
     "feed_cost": 0.042
     },
     {
     "id": 2,
-    "name": "HPLF",  
-    "FCE": 3,
+    "name": "Beer yeast",  
+    "FCE": 0.028,
     "feed_cost": 0.044
     },
     {
     "id": 3,
-    "name": "LPHF", 
-    "FCE": 5,
+    "name": "Bread remains", 
+    "FCE": 0.05,
     "feed_cost": 0.046
     }, 
     {
     "id": 4,
-    "name": "LPLF", 
-    "FCE": 4,
+    "name": "Potato steam peelings", 
+    "FCE": 0.04,
     "feed_cost": 0.048
-    }
-    
+    }  
         ],
     "RW": 1680,
     "RWT": 40,
