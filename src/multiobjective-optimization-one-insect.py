@@ -34,6 +34,8 @@ def convert_individual_to_values(candidate, boundaries) :
     F = candidate["F"]
     EQ = candidate["EQ"]
     RW = candidate["RW"] * (boundaries["RW"][1] - boundaries["RW"][0]) + boundaries["RW"][0]
+    print("---F----")
+    print(F)
     
 
     return SC, Nl, AIF, F, EQ, RW
@@ -53,6 +55,7 @@ def fitness_function(candidate, json_instance, boundaries) :
     feed_cost = 0.0
     insect_frass = 0.0
     labor_safety = 0.0
+    labor_cost_price= 0.0
     labor_safety_max = 0.0
     FWP_max = 0.0
     
@@ -62,34 +65,42 @@ def fitness_function(candidate, json_instance, boundaries) :
     weight = 0.5
     
     for index, equip_dict in enumerate(json_instance["equipments"]) : 
+        labor_cost_price += equip_dict["equipment_cost"] * EQ[index] * Nl
         labor_safety += equip_dict["equipment_cost"] * EQ[index] * json_instance["SFls"][SC-1] * Nl
         labor_safety_max += equip_dict["equipment_cost"] * json_instance["SFls"][SC-1] * Nl
     
     FWP = (RW / json_instance["RWT"])* (json_instance["CWT"]/json_instance["MLW"])*(1 - np.square(json_instance["IEF"]))    
     FWP_max = (boundaries["RW"][1] / json_instance["RWT"])* (json_instance["CWT"]/json_instance["MLW"])*(1 - np.square(json_instance["IEF"]))
     
-    social_aspect = weight * labor_safety / labor_safety_max + (1-weight) * FWP / FWP_max
+    social_aspect = weight * labor_safety / labor_safety_max + (1-weight) *FWP / FWP_max
         
     for index, feed_dict in enumerate(json_instance["feed"]) :
         biomass += AIF * F[index] * feed_dict["FCE"]
-        feed_cost += AIF * F[index] * feed_dict["feed_cost"]       
+        print("-------")
+        print(index)
+        print(AIF* F[index])
+        print(AIF)
+        print(F[index])
+        feed_cost += AIF * F[index] * feed_dict["feed_cost"] * feed_dict["FCE"]      
         insect_frass += AIF / feed_dict["FCE"] * (1.0 - feed_dict["FCE"]) * json_instance["Frsf"][SC-1]
-    operating_profit = (json_instance["sales_price"]-json_instance["energy_cost"]) * biomass - RW*Nl*12 -json_instance["rent"][SC-1]-labor_safety - feed_cost
-    print('Biomass')
-    print(biomass)
-    print(feed_cost) 
-    print((json_instance["sales_price"]-json_instance["energy_cost"])*biomass)
-    print(RW)
-    print(RW*Nl)
-    print(Nl)
-    print(SC)
-    print(json_instance["rent"][SC-1])
+    operating_profit = (json_instance["sales_price"]-json_instance["energy_cost"]-json_instance["rent"]) * biomass - RW*Nl*12 -labor_cost_price / 5 - feed_cost
+    #print('Biomass')
+   # print(biomass)
+   # print(AIF)
     
-    print('------------------------')
-    print(operating_profit)
-    print(insect_frass)
-    print(social_aspect)
-    print('------------------------')
+   # print(feed_cost) 
+   # print((json_instance["sales_price"]-json_instance["energy_cost"])*biomass)
+   # print(RW)
+  #  print(RW*Nl)
+  #  print(Nl)
+  #  print(SC)
+  #  print(json_instance["rent"][SC-1])
+    
+  #  print('------------------------')
+  #  print(operating_profit)
+  #  print(insect_frass)
+  #  print(social_aspect)
+  #  print('------------------------')
    
 
     return operating_profit, 1/insect_frass, social_aspect
@@ -122,6 +133,7 @@ def generator(random, args) :
     for i in range(0, boundaries["F"]) :
         individual["F"].append(random.uniform(0, 1))
     denominator = sum(individual["F"])
+    
 
     for i in range(0, boundaries["F"]) :
         individual["F"][i] /= denominator
@@ -278,9 +290,9 @@ def main() :
     final_pareto_front = nsga2.evolve(
                             generator = generator,
                             evaluator = evaluator,
-                            pop_size = 100,
-                            num_selected = 200,
-                            max_evaluations = 2000,
+                            pop_size = 1000,
+                            num_selected = 2000,
+                            max_evaluations = 20000,
                             maximize = True, # TODO currently, it's trying to maximize EVERYTHING, so we need to 
                                              # have the fitness function output values that are better than higher
                                              # for example, use 1.0/value if the initial idea was to minimize
@@ -312,7 +324,7 @@ def main() :
         val_1= individual.fitness[0]
         val_2= individual.fitness[1]
         val_3= individual.fitness[2]
-        genome = { "SC": SC, "Nl": Nl, "AIF": AIF, "F": F, "EQ": EQ, "RW": RW, "Economic_Impact": val_1, "Environmental_Impact": val_2, "Social_Impact": val_3}
+        genome = { "SC": SC, "Nl": Nl, "AIF": AIF, "F": F, "EQ": EQ, "RW": RW, "Economic_Impact": val_1, "Environmental_Impact": 1/val_2, "Social_Impact": val_3}
         for k in genome :
             # manage parts of the genome who are lists
             if isinstance(genome[k], list) :

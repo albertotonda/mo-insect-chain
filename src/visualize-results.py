@@ -54,7 +54,7 @@ def main() :
     plot_2d(df, output_folder, fitness_names[0], fitness_names[2])
 
     # also, a 3d plot with everything
-    #fig = plt.figure(figsize=(8,8))
+    fig = plt.figure(figsize=(8,8))
     fig = plt.figure()
     ax = Axes3D(fig)
 

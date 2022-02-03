@@ -2,8 +2,8 @@
     "insect": "T.Molitor",                 
     "energy_cost": 45,                
     "feed_cost": 807,                      
-    "total indirect costs": 850,   
-    "rent": [240000, 480000, 720000,840000],
+    "total_indirect_costs": 850,   
+    "rent": 710,
     "sales_price": 1771,   
     "RWT": 39,
     "MLW": 1508,
@@ -13,56 +13,55 @@
     {
     "id": 1,
     "name": "Maize DDGS",
-    "FCE": 0.03,
-    "feed_cost": 0.042
+    "FCE": 0.9,
+    "feed_cost": 250
     },
     {
     "id": 2,
     "name": "Beer yeast",  
-    "FCE": 0.028,
-    "feed_cost": 0.044
+    "FCE": 0.9,
+    "feed_cost": 700
     },
     {
     "id": 3,
     "name": "Bread remains", 
-    "FCE": 0.05,
-    "feed_cost": 0.046
+    "FCE": 0.9,
+    "feed_cost": 300
     }, 
     {
     "id": 4,
     "name": "Potato steam peelings", 
-    "FCE": 0.04,
-    "feed_cost": 0.048
+    "FCE": 0.9,
+    "feed_cost": 200
     }  
         ],
-    "RW": 1680,
     "RWT": 40,
     "Frsf": [0.8, 0.7, 0.5, 0.3],
     "equipments": [
      {
      "id": 1,
      "name": "gloves",
-     "equipment_cost": 30
+     "equipment_cost": 25
      },
      {
      "id": 2,
      "name": "glasses",  
-     "equipment_cost": 70
+     "equipment_cost": 60
      },
      {
      "id": 3,
      "name": "security_shoes",  
-     "equipment_cost": 15
+     "equipment_cost": 230
      }, 
      {
      "id": 4,
      "name": "coveralls", 
-     "equipment_cost": 100
+     "equipment_cost": 520
      },
      {
      "id": 5,
      "name": "hard_hat", 
-     "equipment_cost": 50
+     "equipment_cost": 100
      }
      
          ],
