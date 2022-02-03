@@ -229,7 +229,17 @@ def variator(random, candidate1, candidate2, args) :
     # in our case, we just need to normalize the amounts of each type of feed, and check that the
     # quantities in (0,1) are still in (0,1)
     for individual in children :
+
+        # every element of "F" should also be between 0 and 1
+        for i in range(0, boundaries["F"]) :
+            if individual["F"][i] > 1.0 :
+                individual["F"][i] = 1.0
+            elif individual["F"][i] < 0.0 :
+                individual["F"][i] = 0.0
+
+        # sum of elements of "F" should be 1.0
         denominator = sum(individual["F"])
+
         for i in range(0, boundaries["F"]) :
             individual["F"][i] /= denominator
 
