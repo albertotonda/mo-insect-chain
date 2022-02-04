@@ -30,12 +30,10 @@ def convert_individual_to_values(candidate, boundaries) :
 
     SC = candidate["SC"]
     Nl = int(candidate["Nl"] * (boundaries["Nl"][SC][1] - boundaries["Nl"][SC][0]) + boundaries["Nl"][SC][0])
-    AIF = candidate["AIF"] * (boundaries["AIF"][SC][1] - boundaries["AIF"][SC][0]) + boundaries["Nl"][SC][0]
+    AIF = candidate["AIF"] * (boundaries["AIF"][SC][1] - boundaries["AIF"][SC][0]) + boundaries["AIF"][SC][0]
     F = candidate["F"]
     EQ = candidate["EQ"]
     RW = candidate["RW"] * (boundaries["RW"][1] - boundaries["RW"][0]) + boundaries["RW"][0]
-    print("---F----")
-    print(F)
     
 
     return SC, Nl, AIF, F, EQ, RW
@@ -55,7 +53,7 @@ def fitness_function(candidate, json_instance, boundaries) :
     feed_cost = 0.0
     insect_frass = 0.0
     labor_safety = 0.0
-    labor_cost_price= 0.0
+    labor_safety_cost= 0.0
     labor_safety_max = 0.0
     FWP_max = 0.0
     
@@ -65,7 +63,7 @@ def fitness_function(candidate, json_instance, boundaries) :
     weight = 0.5
     
     for index, equip_dict in enumerate(json_instance["equipments"]) : 
-        labor_cost_price += equip_dict["equipment_cost"] * EQ[index] * Nl
+        labor_safety_cost += equip_dict["equipment_cost"] * EQ[index] * Nl
         labor_safety += equip_dict["equipment_cost"] * EQ[index] * json_instance["SFls"][SC-1] * Nl
         labor_safety_max += equip_dict["equipment_cost"] * json_instance["SFls"][SC-1] * Nl
     
@@ -81,12 +79,12 @@ def fitness_function(candidate, json_instance, boundaries) :
         print(AIF* F[index])
         print(AIF)
         print(F[index])
-        feed_cost += AIF * F[index] * feed_dict["feed_cost"] * feed_dict["FCE"]      
+        feed_cost += AIF * F[index] * feed_dict["feed_cost"]     
         insect_frass += AIF / feed_dict["FCE"] * (1.0 - feed_dict["FCE"]) * json_instance["Frsf"][SC-1]
-    operating_profit = (json_instance["sales_price"]-json_instance["energy_cost"]-json_instance["rent"]) * biomass - RW*Nl*12 -labor_cost_price / 5 - feed_cost
-    #print('Biomass')
-   # print(biomass)
-   # print(AIF)
+    operating_profit = (json_instance["sales_price"]-json_instance["energy_cost"]-json_instance["rent"]) * biomass - RW*Nl*12 -labor_safety_cost - feed_cost
+    print('Biomass')
+    print(biomass)
+    print(AIF)
     
    # print(feed_cost) 
    # print((json_instance["sales_price"]-json_instance["energy_cost"])*biomass)

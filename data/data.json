@@ -13,26 +13,26 @@
     {
     "id": 1,
     "name": "Maize DDGS",
-    "FCE": 0.9,
-    "feed_cost": 250
+    "FCE": 0.7,
+    "feed_cost": 600
     },
     {
     "id": 2,
     "name": "Beer yeast",  
-    "FCE": 0.9,
-    "feed_cost": 700
+    "FCE": 0.6,
+    "feed_cost": 550
     },
     {
     "id": 3,
     "name": "Bread remains", 
-    "FCE": 0.9,
-    "feed_cost": 300
+    "FCE": 0.5,
+    "feed_cost": 500
     }, 
     {
     "id": 4,
     "name": "Potato steam peelings", 
-    "FCE": 0.9,
-    "feed_cost": 200
+    "FCE": 0.5,
+    "feed_cost": 475
     }  
         ],
     "RWT": 40,
@@ -41,27 +41,27 @@
      {
      "id": 1,
      "name": "gloves",
-     "equipment_cost": 25
+     "equipment_cost": 150
      },
      {
      "id": 2,
      "name": "glasses",  
-     "equipment_cost": 60
+     "equipment_cost": 200
      },
      {
      "id": 3,
      "name": "security_shoes",  
-     "equipment_cost": 230
+     "equipment_cost": 730
      }, 
      {
      "id": 4,
      "name": "coveralls", 
-     "equipment_cost": 520
+     "equipment_cost": 820
      },
      {
      "id": 5,
      "name": "hard_hat", 
-     "equipment_cost": 100
+     "equipment_cost": 300
      }
      
          ],
