@@ -57,8 +57,6 @@ def fitness_function(candidate, json_instance, boundaries) :
     labor_safety_max = 0.0
     FWP_max = 0.0
     
-    # equipment cost
-    equipment_cost = 0.0
     #weight = random.uniform(0, 1) # TODO why was this weight randomized?
     weight = 0.5
     
